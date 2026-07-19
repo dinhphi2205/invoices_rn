@@ -213,7 +213,7 @@ export function HomeScreen({navigation}: Props) {
 
   function renderInvoice({item}: {item: Invoice}) {
     const amount = item.invoiceGrossTotal ?? item.totalAmount ?? item.balanceAmount ?? 0;
-    const symbol = item.currencySymbol ?? item.currency ?? '$';
+    const symbol = (item.currencySymbol ?? item.currency ?? '$') as string;
     const paymentStatus = item.status?.[0]?.key ?? 'Unknown';
     const statusColors = getStatusColor(paymentStatus);
 
@@ -517,11 +517,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#111827',
-  },
-  invoiceCustomer: {
-    fontSize: 14,
-    color: '#4B5563',
-    marginBottom: 10,
   },
   itemMeta: {
     fontSize: 13,
