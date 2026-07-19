@@ -8,7 +8,7 @@ export interface InvoiceListParams {
   pageSize: number;
   sortBy?: string;
   ordering?: 'ASCENDING' | 'DESCENDING';
-  search?: string;
+  keyword?: string;
   status?: string;
 }
 

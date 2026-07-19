@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -16,12 +16,32 @@ import {useAuth} from '../contexts/AuthContext';
 import {fetchInvoices} from '../services/invoiceService';
 import type {Invoice} from '../types/invoice';
 import {formatCurrency, getStatusColor} from '../utils/formatting';
+import {LogoutIcon} from '../components/LogoutIcon';
 import type {RootStackParamList} from '../navigation/RootNavigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const PAGE_SIZE = 10;
 const STATUS_FILTERS: Array<'all' | string> = ['all', 'Overdue', 'Due', 'Paid', 'Draft'];
+
+function HeaderRightButtons({onNewPress, onLogoutPress}: {onNewPress: () => void; onLogoutPress: () => void}) {
+  return (
+    <View style={styles.headerButtonsContainer}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onNewPress}
+        style={({pressed}) => [styles.headerIconButton, pressed && styles.buttonPressed]}>
+        <Text style={styles.headerIcon}>+</Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onLogoutPress}
+        style={({pressed}) => [styles.headerIconButton, pressed && styles.buttonPressed]}>
+        <LogoutIcon size={24} color="#111827" />
+      </Pressable>
+    </View>
+  );
+}
 
 export function HomeScreen({navigation}: Props) {
   const {logout} = useAuth();
@@ -36,6 +56,17 @@ export function HomeScreen({navigation}: Props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const headerButtons = useMemo(
+    () => <HeaderRightButtons onNewPress={() => navigation.navigate('CreateInvoice')} onLogoutPress={logout} />,
+    [navigation, logout],
+  );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => headerButtons,
+    });
+  }, [navigation, headerButtons]);
 
   const loadInvoices = useCallback(
     async (page: number, reset = false) => {
@@ -54,7 +85,7 @@ export function HomeScreen({navigation}: Props) {
           pageSize: PAGE_SIZE,
           sortBy: 'CREATED_DATE',
           ordering,
-          search: searchQuery || undefined,
+          keyword: searchQuery || undefined,
           status: statusFilter === 'all' ? undefined : statusFilter,
         });
 
@@ -141,26 +172,12 @@ export function HomeScreen({navigation}: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <View>
-          <Text style={styles.title}>Invoices</Text>
-          <Text style={styles.subtitle}>List, search and manage invoices.</Text>
-        </View>
-
-        <Pressable
-          accessibilityRole="button"
-          onPress={logout}
-          style={({pressed}) => [styles.logoutButton, pressed && styles.buttonPressed]}>
-          <Text style={styles.logoutButtonText}>Sign Out</Text>
-        </Pressable>
-      </View>
-
       <View style={styles.toolbar}>
         <TextInput
           value={searchTerm}
           onChangeText={setSearchTerm}
           onSubmitEditing={handleSearch}
-          placeholder="Search by number, customer, or status"
+          placeholder="IV number (ex: IV_1234)"
           placeholderTextColor="#9CA3AF"
           style={styles.searchInput}
           returnKeyType="search"
@@ -179,13 +196,6 @@ export function HomeScreen({navigation}: Props) {
           onPress={handleSearch}
           style={({pressed}) => [styles.searchButton, pressed && styles.buttonPressed]}>
           <Text style={styles.searchButtonText}>Search</Text>
-        </Pressable>
-
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => navigation.navigate('CreateInvoice')}
-          style={({pressed}) => [styles.createButton, pressed && styles.buttonPressed]}>
-          <Text style={styles.createButtonText}>+ New</Text>
         </Pressable>
       </View>
 
@@ -269,10 +279,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC',
     padding: 16,
   },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+  headerTitleContainer: {
     marginBottom: 16,
   },
   title: {
@@ -285,15 +292,21 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginTop: 4,
   },
-  logoutButton: {
-    backgroundColor: '#EF4444',
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+  headerButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginRight: 8,
   },
-  logoutButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
+  headerIconButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerIcon: {
+    fontSize: 24,
+    color: '#111827',
     fontWeight: '600',
   },
   toolbar: {
@@ -311,18 +324,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-  },
-  createButton: {
-    backgroundColor: '#2563EB',
-    borderRadius: 10,
-    paddingHorizontal: 18,
-    justifyContent: 'center',
-    marginLeft: 12,
-  },
-  createButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
   },
   buttonPressed: {
     opacity: 0.85,
