@@ -33,8 +33,6 @@ export function getStatusColor(status?: string): StatusColorResult {
       return {backgroundColor: '#DBEAFE', textColor: '#2563EB'};
     case 'paid':
       return {backgroundColor: '#DCFCE7', textColor: '#16A34A'};
-    case 'draft':
-      return {backgroundColor: '#F3F4F6', textColor: '#6B7280'};
     default:
       return {backgroundColor: '#F3F4F6', textColor: '#6B7280'};
   }

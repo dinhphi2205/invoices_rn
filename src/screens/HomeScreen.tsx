@@ -23,7 +23,7 @@ import type {RootStackParamList} from '../navigation/RootNavigator';
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const PAGE_SIZE = 10;
-const STATUS_FILTERS: Array<'all' | string> = ['all', 'Overdue', 'Due', 'Paid', 'Draft'];
+const STATUS_FILTERS: Array<'all' | string> = ['all', 'Overdue', 'Due', 'Paid'];
 
 function HeaderRightButtons({onNewPress, onLogoutPress}: {onNewPress: () => void; onLogoutPress: () => void}) {
   return (
