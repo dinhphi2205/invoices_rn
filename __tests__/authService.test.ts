@@ -24,7 +24,7 @@ describe('authService', () => {
 
     mockedAxios.get.mockResolvedValueOnce({
       data: {
-        memberships: [{token: 'org-token'}],
+        data: {memberships: [{token: 'org-token'}]},
       },
     });
 
@@ -44,7 +44,7 @@ describe('authService', () => {
     expect(mockedTokenStorage.saveTokens).toHaveBeenCalledWith(session);
     expect(mockedAxios.post).toHaveBeenCalledWith(
       'https://example.com/oauth2/token',
-      expect.any(URLSearchParams),
+      {"client_id": "client-id", "client_secret": "client-secret", "grant_type": "password", "password": "password", "scope": "openid", "username": "username"},
       expect.objectContaining({
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

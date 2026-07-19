@@ -39,11 +39,7 @@ apiClient.interceptors.request.use(
     if (tokens?.orgToken) {
       config.headers['org-token'] = tokens.orgToken;
     }
-    console.log("=========== Incomming request ===========");
-    console.log("url: ", config.method, config.allowAbsoluteUrls)
-    console.log("url: ", config.headers)
-    console.log("url: ", config.params)
-    console.log("======+==================================");
+
     return config;
   },
   error => Promise.reject(error),

@@ -17,7 +17,7 @@ export interface UserMembership {
 }
 
 export interface UserProfile {
-  memberships?: UserMembership[];
+  data: {memberships?: UserMembership[]};
 }
 
 export interface LoginCredentials {

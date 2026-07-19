@@ -48,7 +48,7 @@ export async function fetchUserProfile(
 }
 
 function extractOrgToken(profile: UserProfile): string {
-  const orgToken = profile.memberships?.[0]?.token;
+  const orgToken = profile.data.memberships?.[0]?.token;
 
   if (!orgToken) {
     throw new Error('Unable to resolve organisation token from user profile.');
@@ -64,8 +64,6 @@ export async function login(
     username: credentials.username.trim(),
     password: credentials.password,
   });
-  console.log(' body ', body)
-
 
   const tokenResponse = await requestToken(body);
   const profile = await fetchUserProfile(tokenResponse.access_token);
