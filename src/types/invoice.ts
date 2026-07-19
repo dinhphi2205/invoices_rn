@@ -9,6 +9,12 @@ export interface MerchantSummary {
   addresses: unknown[];
 }
 
+export interface CustomerSummary {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  addresses: unknown[];
+}
 export interface Invoice {
   // Primary identifiers from API
   invoiceId: string;
@@ -27,6 +33,7 @@ export interface Invoice {
 
   // Merchant / client
   merchant?: MerchantSummary;
+  customer: CustomerSummary
 
   // Status array from API: [{ key: string, value: boolean }]
   status?: RawStatusEntry[];
@@ -34,10 +41,6 @@ export interface Invoice {
   // Optional additional fields from API
   description?: string;
   [key: string]: unknown;
-
-  // Convenience aliases (not sent to API) — optional helpers consumers may use
-  clientName?: string; // mirrors merchant?.name
-  paymentStatus?: string; // derived from status array (e.g. 'Overdue', 'Paid')
 }
 
 export interface InvoiceCreatePayload {

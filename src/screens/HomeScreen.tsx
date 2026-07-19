@@ -213,8 +213,8 @@ export function HomeScreen({navigation}: Props) {
 
   function renderInvoice({item}: {item: Invoice}) {
     const amount = item.invoiceGrossTotal ?? item.totalAmount ?? item.balanceAmount ?? 0;
-    const symbol = (item as any).currencySymbol ?? (item as any).currency ?? '$';
-    const paymentStatus = item.status?.find(s => s.value)?.key ?? item.status?.[0]?.key ?? 'Unknown';
+    const symbol = item.currencySymbol ?? item.currency ?? '$';
+    const paymentStatus = item.status?.[0]?.key ?? 'Unknown';
     const statusColors = getStatusColor(paymentStatus);
 
     return (
@@ -225,7 +225,10 @@ export function HomeScreen({navigation}: Props) {
           <Text style={styles.invoiceNumber}>{item.invoiceNumber}</Text>
           <Text style={styles.invoiceAmount}>{formatCurrency(Number(amount), symbol)}</Text>
         </View>
-        <Text style={styles.invoiceCustomer}>{item.merchant?.name ?? item.clientName}</Text>
+        <View style={styles.itemRow}>
+          <Text style={styles.itemMeta}>Cust: {item.customer?.firstName} {item.customer?.lastName}</Text>
+          <Text style={styles.itemMeta}>Mer: {item.merchant?.name}</Text>
+        </View>
         <View style={styles.itemRow}>
           <Text style={styles.itemMeta}>Issue: {String(item.invoiceDate ?? (item as any).createdAt ?? '')}</Text>
           <Text style={styles.itemMeta}>Due: {String(item.dueDate ?? '')}</Text>
