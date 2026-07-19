@@ -6,10 +6,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuth} from '../contexts/AuthContext';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
+import {CreateInvoiceScreen} from '../screens/CreateInvoiceScreen';
+import {InvoiceDetailScreen} from '../screens/InvoiceDetailScreen';
 
 export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
+  InvoiceDetail: {invoiceId: string};
+  CreateInvoice: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -31,11 +35,32 @@ export function RootNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {backgroundColor: '#FFFFFF'},
+          headerTintColor: '#111827',
+          contentStyle: {backgroundColor: '#FFFFFF'},
+        }}>
         {isAuthenticated ? (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} options={{title: 'Invoices'}} />
+            <Stack.Screen
+              name="InvoiceDetail"
+              component={InvoiceDetailScreen}
+              options={{title: 'Invoice details'}}
+            />
+            <Stack.Screen
+              name="CreateInvoice"
+              component={CreateInvoiceScreen}
+              options={{title: 'Create invoice'}}
+            />
+          </>
         ) : (
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{headerShown: false}}
+          />
         )}
       </Stack.Navigator>
     </NavigationContainer>
