@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
+import DatePicker from 'react-native-date-picker';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {useAuth} from '../contexts/AuthContext';
@@ -43,6 +44,28 @@ function HeaderRightButtons({onNewPress, onLogoutPress}: {onNewPress: () => void
   );
 }
 
+function InlineDatePicker({
+  visible,
+  value,
+  onChange,
+}: {
+  visible: boolean;
+  value: Date;
+  onChange: (event: any, date?: Date) => void;
+}) {
+  if (!visible) return null;
+  return (
+    <DatePicker
+      modal
+      open={visible}
+      date={value}
+      mode="date"
+      onConfirm={d => onChange({}, d)}
+      onCancel={() => onChange({}, undefined)}
+    />
+  );
+}
+
 export function HomeScreen({navigation}: Props) {
   const {logout} = useAuth();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -50,6 +73,50 @@ export function HomeScreen({navigation}: Props) {
   const [hasMore, setHasMore] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [showFromPicker, setShowFromPicker] = useState(false);
+  const [showToPicker, setShowToPicker] = useState(false);
+
+  function formatDateYMD(d: Date) {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  const onFromChange = (_event: any, selected?: Date) => {
+    setShowFromPicker(false);
+    if (selected) {
+      const newFrom = formatDateYMD(selected);
+      setFromDate(newFrom);
+      // if toDate exists and is earlier than new from, bump toDate to newFrom
+      if (toDate) {
+        const to = new Date(`${toDate}T00:00:00`);
+        if (selected > to) {
+          setToDate(newFrom);
+        }
+      }
+    }
+  };
+
+  const onToChange = (_event: any, selected?: Date) => {
+    setShowToPicker(false);
+    if (selected) {
+      // if fromDate exists and selected is before it, clamp to fromDate
+      if (fromDate) {
+        const from = new Date(`${fromDate}T00:00:00`);
+        if (selected < from) {
+          setToDate(fromDate);
+          return;
+        }
+      }
+      setToDate(formatDateYMD(selected));
+    }
+  };
+
+  const fromDateValue = fromDate ? new Date(`${fromDate}T00:00:00`) : new Date();
+  const toDateValue = toDate ? new Date(`${toDate}T00:00:00`) : new Date();
   const [statusFilter, setStatusFilter] = useState<'all' | string>('all');
   const [ordering, setOrdering] = useState<'ASCENDING' | 'DESCENDING'>('DESCENDING');
   const [isLoading, setIsLoading] = useState(true);
@@ -85,8 +152,10 @@ export function HomeScreen({navigation}: Props) {
           pageSize: PAGE_SIZE,
           sortBy: 'CREATED_DATE',
           ordering,
-          keyword: searchQuery || undefined,
+          search: searchQuery || undefined,
           status: statusFilter === 'all' ? undefined : statusFilter,
+          fromDate: fromDate || undefined,
+          toDate: toDate || undefined,
         });
 
         setInvoices(prev => (reset ? invoiceList : [...prev, ...invoiceList]));
@@ -100,7 +169,7 @@ export function HomeScreen({navigation}: Props) {
         setIsLoadingMore(false);
       }
     },
-    [ordering, searchQuery, statusFilter],
+    [ordering, searchQuery, statusFilter, fromDate, toDate],
   );
 
   const loadInitialInvoices = useCallback(() => {
@@ -133,6 +202,8 @@ export function HomeScreen({navigation}: Props) {
   const clearSearch = useCallback(() => {
     setSearchTerm('');
     setSearchQuery('');
+    setFromDate('');
+    setToDate('');
     loadInvoices(1, true);
   }, [loadInvoices]);
 
@@ -198,7 +269,18 @@ export function HomeScreen({navigation}: Props) {
           <Text style={styles.searchButtonText}>Search</Text>
         </Pressable>
       </View>
-
+      <View style={styles.dateRow}>
+        <Pressable onPress={() => setShowFromPicker(true)} style={styles.dateInput}>
+          <Text style={[styles.dateInputText, fromDate ? styles.dateInputValue : styles.dateInputPlaceholder]}>
+            {fromDate || 'From date'}
+          </Text>
+        </Pressable>
+        <Pressable onPress={() => setShowToPicker(true)} style={styles.dateInput}>
+          <Text style={[styles.dateInputText, toDate ? styles.dateInputValue : styles.dateInputPlaceholder]}>
+            {toDate || 'To date'}
+          </Text>
+        </Pressable>
+      </View>
       <View style={styles.filterRow}>
         <View style={styles.filterGroup}>
           <Text style={styles.filterLabel}>Status</Text>
@@ -236,6 +318,8 @@ export function HomeScreen({navigation}: Props) {
           </Pressable>
         </View>
       </View>
+      <InlineDatePicker visible={showFromPicker} value={fromDateValue} onChange={onFromChange} />
+      <InlineDatePicker visible={showToPicker} value={toDateValue} onChange={onToChange} />
 
       {isLoading ? (
         <View style={styles.loadingContainer}>
@@ -278,19 +362,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8FAFC',
     padding: 16,
-  },
-  headerTitleContainer: {
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#111827',
-  },
-  subtitle: {
-    fontSize: 15,
-    color: '#6B7280',
-    marginTop: 4,
   },
   headerButtonsContainer: {
     flexDirection: 'row',
@@ -485,7 +556,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  dateRow: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+  dateInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    color: '#111827',
+    marginRight: 8,
+    fontSize: 14,
+  },
+  dateInputText: {
+    fontSize: 14,
+  },
+  dateInputPlaceholder: {
+    color: '#9CA3AF',
+  },
+  dateInputValue: {
+    color: '#111827',
+  },
   listContent: {
     paddingBottom: 20,
   },
+  
 });

@@ -8,8 +8,12 @@ export interface InvoiceListParams {
   pageSize: number;
   sortBy?: string;
   ordering?: 'ASCENDING' | 'DESCENDING';
-  keyword?: string;
+  // search string (server param may be named 'search' or similar)
+  search?: string;
   status?: string;
+  // optional date range filters in YYYY-MM-dd format
+  fromDate?: string;
+  toDate?: string;
 }
 
 export async function fetchInvoices(
