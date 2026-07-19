@@ -43,12 +43,69 @@ export interface Invoice {
   [key: string]: unknown;
 }
 
-export interface InvoiceCreatePayload {
-  customerName: string;
-  issueDate: string;
-  dueDate: string;
-  amount: number;
+export interface BankAccountPayload {
+  bankId?: string;
+  sortCode?: string;
+  accountNumber?: string;
+  accountName?: string;
+}
+
+export interface AddressPayload {
+  premise?: string;
+  countryCode?: string;
+  postcode?: string;
+  county?: string;
+  city?: string;
+  addressType?: string;
+}
+
+export interface ContactPayload {
+  email?: string;
+  mobileNumber?: string;
+}
+
+export interface CustomerPayload {
+  firstName?: string;
+  lastName?: string;
+  contact?: ContactPayload;
+  addresses?: AddressPayload[];
+}
+
+export interface ItemExtension {
+  addDeduct?: 'ADD' | 'DEDUCT';
+  value?: number;
+  type?: 'PERCENTAGE' | 'FIXED_VALUE';
+  name?: string;
+}
+
+export interface InvoiceItem {
+  itemReference?: string;
   description?: string;
+  quantity?: number;
+  rate?: number;
+  itemName?: string;
+  itemUOM?: string;
+  extensions?: ItemExtension[];
+}
+
+export interface InvoiceExtension {
+  addDeduct?: 'ADD' | 'DEDUCT';
+  value?: number;
+  type?: 'PERCENTAGE' | 'FIXED_VALUE';
+  name?: string;
+}
+
+export interface InvoiceCreatePayload {
+  bankAccount?: BankAccountPayload;
+  customer?: CustomerPayload;
+  invoiceReference?: string;
+  invoiceNumber?: string;
+  currency?: string;
+  invoiceDate?: string;
+  dueDate?: string;
+  description?: string;
+  extensions?: InvoiceExtension[];
+  items?: InvoiceItem[];
 }
 
 export type CreateInvoiceFormValues = InvoiceCreatePayload;
