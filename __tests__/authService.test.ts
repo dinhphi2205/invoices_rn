@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {login, refreshAccessToken} from '../src/services/authService';
+import { login, refreshAccessToken } from '../src/services/authService';
 import * as tokenStorage from '../src/services/tokenStorage';
 
 jest.mock('axios');
@@ -24,7 +24,7 @@ describe('authService', () => {
 
     mockedAxios.get.mockResolvedValueOnce({
       data: {
-        data: {memberships: [{token: 'org-token'}]},
+        data: { memberships: [{ token: 'org-token' }] },
       },
     });
 
@@ -44,7 +44,14 @@ describe('authService', () => {
     expect(mockedTokenStorage.saveTokens).toHaveBeenCalledWith(session);
     expect(mockedAxios.post).toHaveBeenCalledWith(
       'https://example.com/oauth2/token',
-      {"client_id": "client-id", "client_secret": "client-secret", "grant_type": "password", "password": "password", "scope": "openid", "username": "username"},
+      {
+        client_id: 'client-id',
+        client_secret: 'client-secret',
+        grant_type: 'password',
+        password: 'password',
+        scope: 'openid',
+        username: 'username',
+      },
       expect.objectContaining({
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

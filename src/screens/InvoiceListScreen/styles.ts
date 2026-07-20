@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -118,7 +118,7 @@ export const styles = StyleSheet.create({
     shadowColor: '#000000',
     shadowOpacity: 0.04,
     shadowRadius: 10,
-    shadowOffset: {width: 0, height: 3},
+    shadowOffset: { width: 0, height: 3 },
     elevation: 1,
   },
   invoiceItemPressed: {
@@ -205,5 +205,4 @@ export const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 20,
   },
-  
 });

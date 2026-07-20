@@ -1,18 +1,18 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import {useAuth} from '../contexts/AuthContext';
-import {InvoicesListScreen} from '../screens/InvoiceListScreen/InvoicesListScreen';
-import {LoginScreen} from '../screens/LoginScreen';
-import {CreateInvoiceScreen} from '../screens/CreateInvoiceScreen';
-import {InvoiceDetailScreen} from '../screens/InvoiceDetailScreen';
+import { useAuth } from '../contexts/AuthContext';
+import { InvoicesListScreen } from '../screens/InvoiceListScreen/InvoicesListScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { CreateInvoiceScreen } from '../screens/CreateInvoiceScreen';
+import { InvoiceDetailScreen } from '../screens/InvoiceDetailScreen';
 
 export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
-  InvoiceDetail: {invoiceId: string};
+  InvoiceDetail: { invoiceId: string };
   CreateInvoice: undefined;
 };
 
@@ -27,7 +27,7 @@ function LoadingScreen() {
 }
 
 export function RootNavigator() {
-  const {isAuthenticated, isLoading} = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -37,29 +37,33 @@ export function RootNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerStyle: {backgroundColor: '#FFFFFF'},
+          headerStyle: { backgroundColor: '#FFFFFF' },
           headerTintColor: '#111827',
-          contentStyle: {backgroundColor: '#FFFFFF'},
+          contentStyle: { backgroundColor: '#FFFFFF' },
         }}>
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="Home" component={InvoicesListScreen} options={{title: 'Invoices'}} />
+            <Stack.Screen
+              name="Home"
+              component={InvoicesListScreen}
+              options={{ title: 'Invoices' }}
+            />
             <Stack.Screen
               name="InvoiceDetail"
               component={InvoiceDetailScreen}
-              options={{title: 'Invoice details'}}
+              options={{ title: 'Invoice details' }}
             />
             <Stack.Screen
               name="CreateInvoice"
               component={CreateInvoiceScreen}
-              options={{title: 'Create invoice'}}
+              options={{ title: 'Create invoice' }}
             />
           </>
         ) : (
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
         )}
       </Stack.Navigator>

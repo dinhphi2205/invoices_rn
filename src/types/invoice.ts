@@ -33,7 +33,7 @@ export interface Invoice {
 
   // Merchant / client
   merchant?: MerchantSummary;
-  customer: CustomerSummary
+  customer: CustomerSummary;
 
   // Status array from API: [{ key: string, value: boolean }]
   status?: RawStatusEntry[];

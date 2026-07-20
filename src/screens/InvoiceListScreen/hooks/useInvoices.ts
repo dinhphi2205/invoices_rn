@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
-import { Invoice } from "../../../types/invoice";
-import { fetchInvoices } from "../../../services/invoiceService";
+import { useCallback, useState } from 'react';
+import { Invoice } from '../../../types/invoice';
+import { fetchInvoices } from '../../../services/invoiceService';
 
 const PAGE_SIZE = 10;
 type ORDERING = 'ASCENDING' | 'DESCENDING';
@@ -11,7 +11,7 @@ export const useInvoices = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);  
+  const [error, setError] = useState<string | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [pageNum, setPageNum] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -54,19 +54,33 @@ export const useInvoices = () => {
       }
     },
     [ordering, searchQuery, statusFilter, fromDate, toDate],
-  );  
+  );
 
   const loadInitialInvoices = useCallback(() => {
     loadInvoices(1, true);
   }, [loadInvoices]);
 
   const loadMoreInvoices = useCallback(() => {
-    if (isLoading || isRefreshing || isLoadingMore || !hasMore || Boolean(error)) {
+    if (
+      isLoading ||
+      isRefreshing ||
+      isLoadingMore ||
+      !hasMore ||
+      Boolean(error)
+    ) {
       return;
     }
 
     loadInvoices(pageNum + 1);
-  }, [error, hasMore, isLoading, isLoadingMore, isRefreshing, loadInvoices, pageNum]);
+  }, [
+    error,
+    hasMore,
+    isLoading,
+    isLoadingMore,
+    isRefreshing,
+    loadInvoices,
+    pageNum,
+  ]);
 
   return {
     invoices,
@@ -89,5 +103,5 @@ export const useInvoices = () => {
     loadInitialInvoices,
     loadInvoices,
     loadMoreInvoices,
-  }
-}
+  };
+};

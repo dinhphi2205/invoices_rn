@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -6,17 +6,17 @@ import {
   Text,
   View,
 } from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import {fetchInvoice} from '../services/invoiceService';
-import type {Invoice} from '../types/invoice';
-import type {RootStackParamList} from '../navigation/RootNavigator';
-import {formatCurrency} from '../utils/formatting';
+import { fetchInvoice } from '../services/invoiceService';
+import type { Invoice } from '../types/invoice';
+import type { RootStackParamList } from '../navigation/RootNavigator';
+import { formatCurrency } from '../utils/formatting';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'InvoiceDetail'>;
 
-export function InvoiceDetailScreen({route}: Props) {
-  const {invoiceId} = route.params;
+export function InvoiceDetailScreen({ route }: Props) {
+  const { invoiceId } = route.params;
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,11 +70,17 @@ export function InvoiceDetailScreen({route}: Props) {
       <Text style={styles.title}>Invoice {invoice.invoiceNumber}</Text>
       <View style={styles.row}>
         <Text style={styles.label}>Customer</Text>
-        <Text style={styles.value}>{String(invoice.merchant?.name ?? (invoice as any).customerName ?? '')}</Text>
+        <Text style={styles.value}>
+          {String(
+            invoice.merchant?.name ?? (invoice as any).customerName ?? '',
+          )}
+        </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Issue Date</Text>
-        <Text style={styles.value}>{String(invoice.invoiceDate ?? invoice.createdAt ?? '')}</Text>
+        <Text style={styles.value}>
+          {String(invoice.invoiceDate ?? invoice.createdAt ?? '')}
+        </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Due Date</Text>
@@ -82,16 +88,27 @@ export function InvoiceDetailScreen({route}: Props) {
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Amount</Text>
-        <Text style={styles.value}>{formatCurrency(
-          // prefer invoice amounts if present
-          (invoice as any).invoiceGrossTotal ?? (invoice as any).totalAmount ?? (invoice as any).balanceAmount ?? (invoice as any).amount,
-          (invoice as any).currencySymbol,
-          (invoice as any).currency,
-        )}</Text>
+        <Text style={styles.value}>
+          {formatCurrency(
+            // prefer invoice amounts if present
+            (invoice as any).invoiceGrossTotal ??
+              (invoice as any).totalAmount ??
+              (invoice as any).balanceAmount ??
+              (invoice as any).amount,
+            (invoice as any).currencySymbol,
+            (invoice as any).currency,
+          )}
+        </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Status</Text>
-        <Text style={[styles.value, styles.status]}>{String(invoice.status?.find(s => s.value)?.key ?? invoice.status?.[0]?.key ?? 'Unknown')}</Text>
+        <Text style={[styles.value, styles.status]}>
+          {String(
+            invoice.status?.find(s => s.value)?.key ??
+              invoice.status?.[0]?.key ??
+              'Unknown',
+          )}
+        </Text>
       </View>
       {invoice.description ? (
         <View style={styles.row}>

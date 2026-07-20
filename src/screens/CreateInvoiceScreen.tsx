@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -13,13 +13,21 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import PickerModalView from 'react-native-picker-modal-view';
-import {Controller, useFieldArray, useForm, type Control} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  Controller,
+  useFieldArray,
+  useForm,
+  type Control,
+} from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import {createInvoice} from '../services/invoiceService';
-import {createInvoiceSchema, type CreateInvoiceFormValues} from '../validation/invoiceSchema';
-import type {RootStackParamList} from '../navigation/RootNavigator';
+import { createInvoice } from '../services/invoiceService';
+import {
+  createInvoiceSchema,
+  type CreateInvoiceFormValues,
+} from '../validation/invoiceSchema';
+import type { RootStackParamList } from '../navigation/RootNavigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateInvoice'>;
 
@@ -62,7 +70,11 @@ function ItemExtensions({
   itemIndex: number;
   isSubmitting: boolean;
 }) {
-  const {fields: extensionFields, append, remove} = useFieldArray({
+  const {
+    fields: extensionFields,
+    append,
+    remove,
+  } = useFieldArray({
     control,
     name: `items.${itemIndex}.extensions` as any,
   });
@@ -77,8 +89,14 @@ function ItemExtensions({
               <Text style={styles.label}>Name</Text>
               <Controller
                 control={control}
-                name={"items." + itemIndex + ".extensions." + extIndex + ".name" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={
+                  ('items.' +
+                    itemIndex +
+                    '.extensions.' +
+                    extIndex +
+                    '.name') as any
+                }
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     editable={!isSubmitting}
                     onBlur={onBlur}
@@ -96,8 +114,14 @@ function ItemExtensions({
               <Text style={styles.label}>Value</Text>
               <Controller
                 control={control}
-                name={"items." + itemIndex + ".extensions." + extIndex + ".value" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={
+                  ('items.' +
+                    itemIndex +
+                    '.extensions.' +
+                    extIndex +
+                    '.value') as any
+                }
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     keyboardType="numeric"
                     editable={!isSubmitting}
@@ -118,15 +142,27 @@ function ItemExtensions({
               <Text style={styles.label}>Type</Text>
               <Controller
                 control={control}
-                name={"items." + itemIndex + ".extensions." + extIndex + ".type" as any}
-                render={({field: {onChange, value}}) => (
+                name={
+                  ('items.' +
+                    itemIndex +
+                    '.extensions.' +
+                    extIndex +
+                    '.type') as any
+                }
+                render={({ field: { onChange, value } }) => (
                   <PickerModalView
                     renderSelectView={(disabled, selected, showModal) => (
                       <Pressable
                         onPress={showModal}
                         disabled={disabled}
                         style={[styles.input, styles.dateInputButton]}>
-                        <Text style={[styles.dateInputText, selected?.Name ? styles.pickerTextColor : styles.pickerTextPlaceholder]}>
+                        <Text
+                          style={[
+                            styles.dateInputText,
+                            selected?.Name
+                              ? styles.pickerTextColor
+                              : styles.pickerTextPlaceholder,
+                          ]}>
                           {selected?.Name || 'Type'}
                         </Text>
                       </Pressable>
@@ -137,8 +173,19 @@ function ItemExtensions({
                     }}
                     onClosed={() => {}}
                     onEndReached={() => {}}
-                    items={[{Id: 'PERCENTAGE', Name: 'PERCENTAGE', Value: 'PERCENTAGE'}, {Id: 'FIXED_VALUE', Name: 'FIXED_VALUE', Value: 'FIXED_VALUE'}]}
-                    selected={{Id: value, Name: value, Value: value}}
+                    items={[
+                      {
+                        Id: 'PERCENTAGE',
+                        Name: 'PERCENTAGE',
+                        Value: 'PERCENTAGE',
+                      },
+                      {
+                        Id: 'FIXED_VALUE',
+                        Name: 'FIXED_VALUE',
+                        Value: 'FIXED_VALUE',
+                      },
+                    ]}
+                    selected={{ Id: value, Name: value, Value: value }}
                   />
                 )}
               />
@@ -148,15 +195,27 @@ function ItemExtensions({
               <Text style={styles.label}>Add/Deduct</Text>
               <Controller
                 control={control}
-                name={"items." + itemIndex + ".extensions." + extIndex + ".addDeduct" as any}
-                render={({field: {onChange, value}}) => (
+                name={
+                  ('items.' +
+                    itemIndex +
+                    '.extensions.' +
+                    extIndex +
+                    '.addDeduct') as any
+                }
+                render={({ field: { onChange, value } }) => (
                   <PickerModalView
                     renderSelectView={(disabled, selected, showModal) => (
                       <Pressable
                         onPress={showModal}
                         disabled={disabled}
                         style={[styles.input, styles.dateInputButton]}>
-                        <Text style={[styles.dateInputText, selected?.Name ? styles.pickerTextColor : styles.pickerTextPlaceholder]}>
+                        <Text
+                          style={[
+                            styles.dateInputText,
+                            selected?.Name
+                              ? styles.pickerTextColor
+                              : styles.pickerTextPlaceholder,
+                          ]}>
                           {selected?.Name || 'Add/Deduct'}
                         </Text>
                       </Pressable>
@@ -167,8 +226,11 @@ function ItemExtensions({
                     }}
                     onClosed={() => {}}
                     onEndReached={() => {}}
-                    items={[{Id: 'ADD', Name: 'ADD', Value: 'ADD'}, {Id: 'DEDUCT', Name: 'DEDUCT', Value: 'DEDUCT'}]}
-                    selected={{Id: value, Name: value, Value: value}}
+                    items={[
+                      { Id: 'ADD', Name: 'ADD', Value: 'ADD' },
+                      { Id: 'DEDUCT', Name: 'DEDUCT', Value: 'DEDUCT' },
+                    ]}
+                    selected={{ Id: value, Name: value, Value: value }}
                   />
                 )}
               />
@@ -179,7 +241,10 @@ function ItemExtensions({
             accessibilityRole="button"
             onPress={() => remove(extIndex)}
             disabled={isSubmitting}
-            style={({pressed}) => [styles.removeButton, pressed && styles.buttonPressed]}>
+            style={({ pressed }) => [
+              styles.removeButton,
+              pressed && styles.buttonPressed,
+            ]}>
             <Text style={styles.removeButtonText}>Remove Extension</Text>
           </Pressable>
         </View>
@@ -196,7 +261,10 @@ function ItemExtensions({
           })
         }
         disabled={isSubmitting}
-        style={({pressed}) => [styles.button, (pressed || isSubmitting) && styles.buttonPressed]}>
+        style={({ pressed }) => [
+          styles.button,
+          (pressed || isSubmitting) && styles.buttonPressed,
+        ]}>
         <Text style={styles.buttonText}>Add Extension</Text>
       </Pressable>
     </View>
@@ -210,7 +278,11 @@ function CustomerAddresses({
   control: Control<CreateInvoiceFormValues>;
   isSubmitting: boolean;
 }) {
-  const {fields: addressFields, append, remove} = useFieldArray({
+  const {
+    fields: addressFields,
+    append,
+    remove,
+  } = useFieldArray({
     control,
     name: 'customer.addresses' as any,
   });
@@ -225,8 +297,10 @@ function CustomerAddresses({
               <Text style={styles.label}>Address Type</Text>
               <Controller
                 control={control}
-                name={"customer.addresses." + addrIndex + ".addressType" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={
+                  ('customer.addresses.' + addrIndex + '.addressType') as any
+                }
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     editable={!isSubmitting}
                     onBlur={onBlur}
@@ -244,8 +318,8 @@ function CustomerAddresses({
               <Text style={styles.label}>Premise</Text>
               <Controller
                 control={control}
-                name={"customer.addresses." + addrIndex + ".premise" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={('customer.addresses.' + addrIndex + '.premise') as any}
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     editable={!isSubmitting}
                     onBlur={onBlur}
@@ -265,8 +339,8 @@ function CustomerAddresses({
               <Text style={styles.label}>City</Text>
               <Controller
                 control={control}
-                name={"customer.addresses." + addrIndex + ".city" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={('customer.addresses.' + addrIndex + '.city') as any}
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     editable={!isSubmitting}
                     onBlur={onBlur}
@@ -284,8 +358,8 @@ function CustomerAddresses({
               <Text style={styles.label}>County</Text>
               <Controller
                 control={control}
-                name={"customer.addresses." + addrIndex + ".county" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={('customer.addresses.' + addrIndex + '.county') as any}
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     editable={!isSubmitting}
                     onBlur={onBlur}
@@ -305,8 +379,8 @@ function CustomerAddresses({
               <Text style={styles.label}>Postcode</Text>
               <Controller
                 control={control}
-                name={"customer.addresses." + addrIndex + ".postcode" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={('customer.addresses.' + addrIndex + '.postcode') as any}
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     editable={!isSubmitting}
                     onBlur={onBlur}
@@ -324,8 +398,10 @@ function CustomerAddresses({
               <Text style={styles.label}>Country Code</Text>
               <Controller
                 control={control}
-                name={"customer.addresses." + addrIndex + ".countryCode" as any}
-                render={({field: {onChange, onBlur, value}}) => (
+                name={
+                  ('customer.addresses.' + addrIndex + '.countryCode') as any
+                }
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     editable={!isSubmitting}
                     onBlur={onBlur}
@@ -344,7 +420,10 @@ function CustomerAddresses({
             accessibilityRole="button"
             onPress={() => remove(addrIndex)}
             disabled={isSubmitting}
-            style={({pressed}) => [styles.removeButton, pressed && styles.buttonPressed]}>
+            style={({ pressed }) => [
+              styles.removeButton,
+              pressed && styles.buttonPressed,
+            ]}>
             <Text style={styles.removeButtonText}>Remove Address</Text>
           </Pressable>
         </View>
@@ -363,14 +442,17 @@ function CustomerAddresses({
           })
         }
         disabled={isSubmitting}
-        style={({pressed}) => [styles.button, (pressed || isSubmitting) && styles.buttonPressed]}>
+        style={({ pressed }) => [
+          styles.button,
+          (pressed || isSubmitting) && styles.buttonPressed,
+        ]}>
         <Text style={styles.buttonText}>Add Address</Text>
       </Pressable>
     </View>
   );
 }
 
-export function CreateInvoiceScreen({navigation}: Props) {
+export function CreateInvoiceScreen({ navigation }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showInvoiceDatePicker, setShowInvoiceDatePicker] = useState(false);
   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
@@ -378,7 +460,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
   const {
     control,
     handleSubmit,
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
     setValue,
   } = useForm<CreateInvoiceFormValues>({
     defaultValues: {
@@ -391,7 +473,10 @@ export function CreateInvoiceScreen({navigation}: Props) {
       customer: {
         firstName: 'Nguyen',
         lastName: 'Dung 2',
-        contact: {email: 'nguyendung2@101digital.io', mobileNumber: '+6597594971'},
+        contact: {
+          email: 'nguyendung2@101digital.io',
+          mobileNumber: '+6597594971',
+        },
         addresses: [
           {
             premise: 'CT11',
@@ -407,11 +492,18 @@ export function CreateInvoiceScreen({navigation}: Props) {
       invoiceNumber: 'INV000000001',
       currency: 'GBP',
       invoiceDate: new Date().toISOString().slice(0, 10),
-      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10),
       description: 'Invoice is issued to Akila Jayasinghe',
       extensions: [
-        {addDeduct: 'ADD', value: 10, type: 'PERCENTAGE', name: 'tax'},
-        {addDeduct: 'DEDUCT', value: 10.0, type: 'FIXED_VALUE', name: 'discount'},
+        { addDeduct: 'ADD', value: 10, type: 'PERCENTAGE', name: 'tax' },
+        {
+          addDeduct: 'DEDUCT',
+          value: 10.0,
+          type: 'FIXED_VALUE',
+          name: 'discount',
+        },
       ],
       items: [
         {
@@ -422,8 +514,8 @@ export function CreateInvoiceScreen({navigation}: Props) {
           itemName: 'Honda Motor',
           itemUOM: 'KG',
           extensions: [
-            {addDeduct: 'ADD', value: 10, type: 'FIXED_VALUE', name: 'tax'},
-            {addDeduct: 'DEDUCT', value: 10, type: 'PERCENTAGE', name: 'tax'},
+            { addDeduct: 'ADD', value: 10, type: 'FIXED_VALUE', name: 'tax' },
+            { addDeduct: 'DEDUCT', value: 10, type: 'PERCENTAGE', name: 'tax' },
           ],
         },
       ],
@@ -432,7 +524,11 @@ export function CreateInvoiceScreen({navigation}: Props) {
     mode: 'onSubmit',
   });
 
-  const {fields: itemFields, append, remove} = useFieldArray({
+  const {
+    fields: itemFields,
+    append,
+    remove,
+  } = useFieldArray({
     control,
     name: 'items',
   });
@@ -443,7 +539,10 @@ export function CreateInvoiceScreen({navigation}: Props) {
     try {
       // createInvoice expects the invoice payload; our API client will post this shape
       await createInvoice(values as any);
-      Alert.alert('Invoice created', 'The invoice has been created successfully.');
+      Alert.alert(
+        'Invoice created',
+        'The invoice has been created successfully.',
+      );
       navigation.navigate('Home');
     } catch (error) {
       setSubmitError(getErrorMessage(error));
@@ -454,11 +553,13 @@ export function CreateInvoiceScreen({navigation}: Props) {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={styles.container}>
-      <ScrollView contentContainerStyle={styles.card} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={styles.card}
+        keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Create Invoice</Text>
         <Text style={styles.subtitle}>Fill in the invoice details below.</Text>
 
-                <View style={styles.section}>
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Bank Account</Text>
 
           <View style={styles.fieldGroup}>
@@ -466,7 +567,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="bankAccount.sortCode"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   editable={!isSubmitting}
                   onBlur={onBlur}
@@ -485,7 +586,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="bankAccount.accountNumber"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   keyboardType="numeric"
                   editable={!isSubmitting}
@@ -505,7 +606,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="bankAccount.accountName"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   autoCapitalize="words"
                   editable={!isSubmitting}
@@ -525,7 +626,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="bankAccount.bankId"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   editable={!isSubmitting}
                   onBlur={onBlur}
@@ -547,7 +648,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="customer.firstName"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   autoCapitalize="words"
                   editable={!isSubmitting}
@@ -555,13 +656,18 @@ export function CreateInvoiceScreen({navigation}: Props) {
                   onChangeText={onChange}
                   placeholder="First name"
                   placeholderTextColor="#9CA3AF"
-                  style={[styles.input, errors.customer?.firstName && styles.inputError]}
+                  style={[
+                    styles.input,
+                    errors.customer?.firstName && styles.inputError,
+                  ]}
                   value={value as string}
                 />
               )}
             />
             {errors.customer?.firstName ? (
-              <Text style={styles.errorText}>{(errors.customer.firstName as any).message}</Text>
+              <Text style={styles.errorText}>
+                {(errors.customer.firstName as any).message}
+              </Text>
             ) : null}
           </View>
 
@@ -570,7 +676,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="customer.lastName"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   autoCapitalize="words"
                   editable={!isSubmitting}
@@ -590,7 +696,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="customer.contact.email"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   keyboardType="email-address"
                   editable={!isSubmitting}
@@ -598,13 +704,18 @@ export function CreateInvoiceScreen({navigation}: Props) {
                   onChangeText={onChange}
                   placeholder="Email"
                   placeholderTextColor="#9CA3AF"
-                  style={[styles.input, errors.customer?.contact?.email && styles.inputError]}
+                  style={[
+                    styles.input,
+                    errors.customer?.contact?.email && styles.inputError,
+                  ]}
                   value={value as string}
                 />
               )}
             />
             {errors.customer?.contact?.email ? (
-              <Text style={styles.errorText}>{(errors.customer.contact.email as any).message}</Text>
+              <Text style={styles.errorText}>
+                {(errors.customer.contact.email as any).message}
+              </Text>
             ) : null}
           </View>
 
@@ -613,7 +724,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="customer.contact.mobileNumber"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   keyboardType="phone-pad"
                   editable={!isSubmitting}
@@ -639,7 +750,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="invoiceReference"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   editable={!isSubmitting}
                   onBlur={onBlur}
@@ -658,20 +769,25 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="invoiceNumber"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   editable={!isSubmitting}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   placeholder="INV123"
                   placeholderTextColor="#9CA3AF"
-                  style={[styles.input, errors.invoiceNumber && styles.inputError]}
+                  style={[
+                    styles.input,
+                    errors.invoiceNumber && styles.inputError,
+                  ]}
                   value={value as string}
                 />
               )}
             />
             {errors.invoiceNumber ? (
-              <Text style={styles.errorText}>{errors.invoiceNumber.message}</Text>
+              <Text style={styles.errorText}>
+                {errors.invoiceNumber.message}
+              </Text>
             ) : null}
           </View>
 
@@ -681,15 +797,21 @@ export function CreateInvoiceScreen({navigation}: Props) {
               <Controller
                 control={control}
                 name="invoiceDate"
-                render={({field: {value}}) => (
+                render={({ field: { value } }) => (
                   <Pressable
                     accessibilityRole="button"
                     onPress={() => setShowInvoiceDatePicker(true)}
-                    style={[styles.input, errors.invoiceDate && styles.inputError, styles.dateInputButton]}>
+                    style={[
+                      styles.input,
+                      errors.invoiceDate && styles.inputError,
+                      styles.dateInputButton,
+                    ]}>
                     <Text
                       style={[
                         styles.dateInputText,
-                        (value as string) ? styles.dateInputValue : styles.dateInputPlaceholder,
+                        (value as string)
+                          ? styles.dateInputValue
+                          : styles.dateInputPlaceholder,
                       ]}>
                       {(value as string) || 'Select date'}
                     </Text>
@@ -697,7 +819,9 @@ export function CreateInvoiceScreen({navigation}: Props) {
                 )}
               />
               {errors.invoiceDate ? (
-                <Text style={styles.errorText}>{errors.invoiceDate.message}</Text>
+                <Text style={styles.errorText}>
+                  {errors.invoiceDate.message}
+                </Text>
               ) : null}
             </View>
 
@@ -706,15 +830,21 @@ export function CreateInvoiceScreen({navigation}: Props) {
               <Controller
                 control={control}
                 name="dueDate"
-                render={({field: {value}}) => (
+                render={({ field: { value } }) => (
                   <Pressable
                     accessibilityRole="button"
                     onPress={() => setShowDueDatePicker(true)}
-                    style={[styles.input, errors.dueDate && styles.inputError, styles.dateInputButton]}>
+                    style={[
+                      styles.input,
+                      errors.dueDate && styles.inputError,
+                      styles.dateInputButton,
+                    ]}>
                     <Text
                       style={[
                         styles.dateInputText,
-                        (value as string) ? styles.dateInputValue : styles.dateInputPlaceholder,
+                        (value as string)
+                          ? styles.dateInputValue
+                          : styles.dateInputPlaceholder,
                       ]}>
                       {(value as string) || 'Select date'}
                     </Text>
@@ -732,7 +862,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="currency"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   editable={!isSubmitting}
                   onBlur={onBlur}
@@ -754,7 +884,7 @@ export function CreateInvoiceScreen({navigation}: Props) {
             <Controller
               control={control}
               name="description"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   editable={!isSubmitting}
                   multiline
@@ -790,21 +920,26 @@ export function CreateInvoiceScreen({navigation}: Props) {
                 <Text style={styles.label}>Item Description</Text>
                 <Controller
                   control={control}
-                  name={"items." + index + ".description" as any}
-                  render={({field: {onChange, onBlur, value}}) => (
+                  name={('items.' + index + '.description') as any}
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       editable={!isSubmitting}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       placeholder="Item description"
                       placeholderTextColor="#9CA3AF"
-                      style={[styles.input, errors.items?.[index]?.description && styles.inputError]}
+                      style={[
+                        styles.input,
+                        errors.items?.[index]?.description && styles.inputError,
+                      ]}
                       value={value as string}
                     />
                   )}
                 />
                 {errors.items?.[index]?.description ? (
-                  <Text style={styles.errorText}>{(errors.items[index].description as any).message}</Text>
+                  <Text style={styles.errorText}>
+                    {(errors.items[index].description as any).message}
+                  </Text>
                 ) : null}
               </View>
 
@@ -813,8 +948,8 @@ export function CreateInvoiceScreen({navigation}: Props) {
                   <Text style={styles.label}>Quantity</Text>
                   <Controller
                     control={control}
-                    name={"items." + index + ".quantity" as any}
-                    render={({field: {onChange, onBlur, value}}) => (
+                    name={('items.' + index + '.quantity') as any}
+                    render={({ field: { onChange, onBlur, value } }) => (
                       <TextInput
                         keyboardType="numeric"
                         editable={!isSubmitting}
@@ -822,13 +957,18 @@ export function CreateInvoiceScreen({navigation}: Props) {
                         onChangeText={text => onChange(Number(text))}
                         placeholder="1"
                         placeholderTextColor="#9CA3AF"
-                        style={[styles.input, errors.items?.[index]?.quantity && styles.inputError]}
+                        style={[
+                          styles.input,
+                          errors.items?.[index]?.quantity && styles.inputError,
+                        ]}
                         value={value !== undefined ? String(value) : ''}
                       />
                     )}
                   />
                   {errors.items?.[index]?.quantity ? (
-                    <Text style={styles.errorText}>{(errors.items[index].quantity as any).message}</Text>
+                    <Text style={styles.errorText}>
+                      {(errors.items[index].quantity as any).message}
+                    </Text>
                   ) : null}
                 </View>
 
@@ -836,8 +976,8 @@ export function CreateInvoiceScreen({navigation}: Props) {
                   <Text style={styles.label}>Rate</Text>
                   <Controller
                     control={control}
-                    name={"items." + index + ".rate" as any}
-                    render={({field: {onChange, onBlur, value}}) => (
+                    name={('items.' + index + '.rate') as any}
+                    render={({ field: { onChange, onBlur, value } }) => (
                       <TextInput
                         keyboardType="numeric"
                         editable={!isSubmitting}
@@ -845,13 +985,18 @@ export function CreateInvoiceScreen({navigation}: Props) {
                         onChangeText={text => onChange(Number(text))}
                         placeholder="1000"
                         placeholderTextColor="#9CA3AF"
-                        style={[styles.input, errors.items?.[index]?.rate && styles.inputError]}
+                        style={[
+                          styles.input,
+                          errors.items?.[index]?.rate && styles.inputError,
+                        ]}
                         value={value !== undefined ? String(value) : ''}
                       />
                     )}
                   />
                   {errors.items?.[index]?.rate ? (
-                    <Text style={styles.errorText}>{(errors.items[index].rate as any).message}</Text>
+                    <Text style={styles.errorText}>
+                      {(errors.items[index].rate as any).message}
+                    </Text>
                   ) : null}
                 </View>
               </View>
@@ -878,18 +1023,23 @@ export function CreateInvoiceScreen({navigation}: Props) {
               })
             }
             disabled={isSubmitting}
-            style={({pressed}) => [styles.button, (pressed || isSubmitting) && styles.buttonPressed]}>
+            style={({ pressed }) => [
+              styles.button,
+              (pressed || isSubmitting) && styles.buttonPressed,
+            ]}>
             <Text style={styles.buttonText}>Add Item</Text>
           </Pressable>
         </View>
 
-        {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
+        {submitError ? (
+          <Text style={styles.submitError}>{submitError}</Text>
+        ) : null}
 
         <Pressable
           accessibilityRole="button"
           disabled={isSubmitting}
           onPress={onSubmit}
-          style={({pressed}) => [
+          style={({ pressed }) => [
             styles.button,
             (isSubmitting || pressed) && styles.buttonPressed,
           ]}>

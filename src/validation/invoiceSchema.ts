@@ -74,7 +74,10 @@ export const createInvoiceSchema = yup.object<CreateInvoiceFormValues>({
       contact: yup
         .object()
         .shape({
-          email: yup.string().email('Invalid email').required('Email is required'),
+          email: yup
+            .string()
+            .email('Invalid email')
+            .required('Email is required'),
           mobileNumber: yup.string().trim().optional(),
         })
         .required(),
@@ -98,9 +101,20 @@ export const createInvoiceSchema = yup.object<CreateInvoiceFormValues>({
     .array()
     .of(
       yup.object().shape({
-        description: yup.string().trim().required('Item description is required'),
-        quantity: yup.number().typeError('Quantity must be a number').min(1).required('Quantity is required'),
-        rate: yup.number().typeError('Rate must be a number').min(0).required('Rate is required'),
+        description: yup
+          .string()
+          .trim()
+          .required('Item description is required'),
+        quantity: yup
+          .number()
+          .typeError('Quantity must be a number')
+          .min(1)
+          .required('Quantity is required'),
+        rate: yup
+          .number()
+          .typeError('Rate must be a number')
+          .min(0)
+          .required('Rate is required'),
       }),
     )
     .min(1, 'At least one item is required'),

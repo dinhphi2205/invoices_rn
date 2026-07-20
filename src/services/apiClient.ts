@@ -1,10 +1,10 @@
-import axios, {AxiosError, InternalAxiosRequestConfig} from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
-import {env} from '../config/env';
-import {notifySessionExpired} from './authEvents';
-import {getTokens, saveTokens} from './tokenStorage';
-import {refreshAccessToken, logout} from './authService';
+import { env } from '../config/env';
+import { notifySessionExpired } from './authEvents';
+import { getTokens, saveTokens } from './tokenStorage';
+import { refreshAccessToken, logout } from './authService';
 
 export const apiClient = axios.create({
   baseURL: env.apiBaseUrl,
@@ -29,7 +29,6 @@ async function getRefreshedAccessToken(): Promise<string> {
 
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    
     const tokens = await getTokens();
 
     if (tokens?.accessToken) {

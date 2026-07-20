@@ -1,5 +1,5 @@
-import {apiClient} from './apiClient';
-import type {Invoice, InvoiceCreatePayload} from '../types/invoice';
+import { apiClient } from './apiClient';
+import type { Invoice, InvoiceCreatePayload } from '../types/invoice';
 
 const invoicePath = '/invoice-service/1.0.0/invoices';
 
@@ -19,9 +19,12 @@ export interface InvoiceListParams {
 export async function fetchInvoices(
   params: InvoiceListParams,
 ): Promise<Invoice[]> {
-  const response = await apiClient.get<Invoice[] | {data: Invoice[]}>(invoicePath, {
-    params,
-  });
+  const response = await apiClient.get<Invoice[] | { data: Invoice[] }>(
+    invoicePath,
+    {
+      params,
+    },
+  );
 
   const payload = response.data as any;
   if (Array.isArray(payload)) {

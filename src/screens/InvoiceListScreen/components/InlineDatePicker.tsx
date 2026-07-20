@@ -1,4 +1,4 @@
-import React, {} from 'react';
+import React from 'react';
 import DatePicker from 'react-native-date-picker';
 
 export function InlineDatePicker({

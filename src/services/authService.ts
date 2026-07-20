@@ -1,24 +1,22 @@
 import axios from 'axios';
 
-import {env} from '../config/env';
+import { env } from '../config/env';
 import type {
   AuthSession,
   LoginCredentials,
   TokenResponse,
   UserProfile,
 } from '../types/auth';
-import {clearTokens, getTokens, saveTokens} from './tokenStorage';
+import { clearTokens, getTokens, saveTokens } from './tokenStorage';
 
-function buildTokenRequestBody(
-  params: Record<string, string>,
-): any {
+function buildTokenRequestBody(params: Record<string, string>): any {
   return {
     client_id: env.clientId,
     client_secret: env.clientSecret,
     grant_type: 'password',
     scope: 'openid',
     ...params,
-  }
+  };
 }
 
 async function requestToken(body: URLSearchParams): Promise<TokenResponse> {
@@ -93,9 +91,9 @@ export async function refreshAccessToken(): Promise<AuthSession> {
   });
 
   const tokenResponse = await requestToken(body);
-  const orgToken = storedTokens.orgToken ?? extractOrgToken(
-    await fetchUserProfile(tokenResponse.access_token),
-  );
+  const orgToken =
+    storedTokens.orgToken ??
+    extractOrgToken(await fetchUserProfile(tokenResponse.access_token));
 
   const session: AuthSession = {
     accessToken: tokenResponse.access_token,

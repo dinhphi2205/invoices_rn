@@ -24,17 +24,19 @@ export interface StatusColorResult {
 }
 
 export function getStatusColor(status?: string): StatusColorResult {
-  const normalized = String(status ?? '').toLowerCase().trim();
+  const normalized = String(status ?? '')
+    .toLowerCase()
+    .trim();
 
   switch (normalized) {
     case 'overdue':
-      return {backgroundColor: '#FEE2E2', textColor: '#DC2626'};
+      return { backgroundColor: '#FEE2E2', textColor: '#DC2626' };
     case 'due':
-      return {backgroundColor: '#DBEAFE', textColor: '#2563EB'};
+      return { backgroundColor: '#DBEAFE', textColor: '#2563EB' };
     case 'paid':
-      return {backgroundColor: '#DCFCE7', textColor: '#16A34A'};
+      return { backgroundColor: '#DCFCE7', textColor: '#16A34A' };
     default:
-      return {backgroundColor: '#F3F4F6', textColor: '#6B7280'};
+      return { backgroundColor: '#F3F4F6', textColor: '#6B7280' };
   }
 }
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -9,14 +9,11 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {Controller, useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import {useAuth} from '../contexts/AuthContext';
-import {
-  loginSchema,
-  type LoginFormValues,
-} from '../validation/loginSchema';
+import { useAuth } from '../contexts/AuthContext';
+import { loginSchema, type LoginFormValues } from '../validation/loginSchema';
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
@@ -27,13 +24,13 @@ function getErrorMessage(error: unknown): string {
 }
 
 export function LoginScreen() {
-  const {login} = useAuth();
+  const { login } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     control,
     handleSubmit,
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     defaultValues: {
       username: '',
@@ -66,7 +63,7 @@ export function LoginScreen() {
           <Controller
             control={control}
             name="username"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -91,7 +88,7 @@ export function LoginScreen() {
           <Controller
             control={control}
             name="password"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 editable={!isSubmitting}
                 onBlur={onBlur}
@@ -117,7 +114,7 @@ export function LoginScreen() {
           accessibilityRole="button"
           disabled={isSubmitting}
           onPress={onSubmit}
-          style={({pressed}) => [
+          style={({ pressed }) => [
             styles.button,
             (isSubmitting || pressed) && styles.buttonPressed,
           ]}>
@@ -146,7 +143,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000000',
     shadowOpacity: 0.08,
     shadowRadius: 12,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
   title: {

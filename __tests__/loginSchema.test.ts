@@ -1,4 +1,4 @@
-import {loginSchema} from '../src/validation/loginSchema';
+import { loginSchema } from '../src/validation/loginSchema';
 
 describe('loginSchema', () => {
   it('accepts valid credentials', async () => {

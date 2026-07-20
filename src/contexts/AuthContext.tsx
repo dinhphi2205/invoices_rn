@@ -12,8 +12,8 @@ import {
   logout as logoutRequest,
   restoreSession,
 } from '../services/authService';
-import {setSessionExpiredListener} from '../services/authEvents';
-import type {AuthSession, LoginCredentials} from '../types/auth';
+import { setSessionExpiredListener } from '../services/authEvents';
+import type { AuthSession, LoginCredentials } from '../types/auth';
 
 interface AuthContextValue {
   session: AuthSession | null;
@@ -25,7 +25,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({children}: {children: React.ReactNode}) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<AuthSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

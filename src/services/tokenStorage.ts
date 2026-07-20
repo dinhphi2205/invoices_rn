@@ -1,7 +1,7 @@
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 
-import type {StoredTokens} from '../types/auth';
+import type { StoredTokens } from '../types/auth';
 
 const SERVICE_NAME = 'simpleinvoice.auth';
 
@@ -37,14 +37,10 @@ function parseTokens(rawValue: string): StoredTokens | null {
 }
 
 export async function saveTokens(tokens: StoredTokens): Promise<void> {
-  await Keychain.setGenericPassword(
-    'tokens',
-    serializeTokens(tokens),
-    {
-      service: SERVICE_NAME,
-      ...keychainOptions,
-    },
-  );
+  await Keychain.setGenericPassword('tokens', serializeTokens(tokens), {
+    service: SERVICE_NAME,
+    ...keychainOptions,
+  });
 }
 
 export async function getTokens(): Promise<StoredTokens | null> {
