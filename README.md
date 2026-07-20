@@ -1,4 +1,4 @@
-THIS POC OF ASSIGNMENT FOR INVOICE OPERATOR WHICH WILL HELP OPERATOR TO CREATE AND MANAGE LIST INVOICES
+## THIS POC OF ASSIGNMENT FOR INVOICE OPERATOR WHICH WILL HELP OPERATOR TO CREATE AND MANAGE LIST INVOICES
 
 ### Features have been done: 
 - Login
@@ -7,12 +7,13 @@ THIS POC OF ASSIGNMENT FOR INVOICE OPERATOR WHICH WILL HELP OPERATOR TO CREATE A
 - Create simple invoice
 
 ### Project structure: 
+```
 my-project/
 ├── node_modules        folder node packages those were imported from package.json
 ├── android             contain android native config/code base
 ├── ios                 contain android native config/code base
 ├── src
-│   ├── components      contains commons component
+│   ├── components 
 │   ├── config          all the configs in app
 │   ├── contexts        react-native context
 │   ├── navigation      register/manage screens in app
@@ -22,20 +23,21 @@ my-project/
 │   └── validation      for form validation
 ├── package.json        
 └── README.md
+```
 
-What i have done in this POC to follow requirement: 
+#### What i have done in this POC to follow requirement: 
 - Securely store sensitive data with in keychain (iOS) and Encrypted Secured Preferences (Android)
 - Keep client key / secret away from source code hence perform token login and exchange securely from FE perspective
 - Validated input
 
-What i need to improve for this POC technically: 
+#### What i need to improve for this POC technically: 
 - Add more testcase
 - Exchange token will fire an event that help screen(presenter) and re-fetch api whenever they need
 - Standardize and centralize UI system (color, space, typograpy, button, modal, icon, badge,...)
 - Centralize label, text and message,... to make it easier to manage and support multi language
 - Add more CI strictly to folllow coding standard + quality and support CD
 
-What i need to improve for this POC on business side: 
+#### What i need to improve for this POC on business side: 
 - User can search invoice not only INV number but also customer, merchant
 - Ability to export invoice as PDF and download/share
 - Split form to create invoice, user should only keyin section by section instead of lot of text input, spinner,... in a single screen
@@ -43,7 +45,7 @@ What i need to improve for this POC on business side:
 
 
 
-# STEP TO RUN APP IN DEVELOPMENT ENV
+## STEP TO RUN APP IN DEVELOPMENT ENV
 
 ## Step 0: Install
 
@@ -51,7 +53,7 @@ What i need to improve for this POC on business side:
 yarn
 ```
 
-copy .env.example to .env and add client key/secret
+then copy .env.example to .env and add client key/secret
 
 
 ## Step 1: Start Metro
@@ -93,7 +95,5 @@ bundle exec pod install
 For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
 
 ```sh
-
-# OR using Yarn
 yarn ios
 ```
