@@ -41,9 +41,13 @@ export async function fetchInvoice(invoiceId: string): Promise<Invoice> {
   return response.data.data;
 }
 
-export async function createInvoice(
-  payload: InvoiceCreatePayload,
-): Promise<Invoice> {
-  const response = await apiClient.post<Invoice>(invoicePath, payload);
+export async function createInvoice(payload: {
+  invoices: InvoiceCreatePayload[];
+}): Promise<Invoice> {
+  const response = await apiClient.post<Invoice>(invoicePath, payload, {
+    headers: {
+      'Operation-Mode ': 'SYNC',
+    },
+  });
   return response.data;
 }

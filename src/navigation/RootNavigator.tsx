@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../contexts/AuthContext';
 import { InvoicesListScreen } from '../screens/InvoiceListScreen/InvoicesListScreen';
 import { LoginScreen } from '../screens/LoginScreen';
-import { CreateInvoiceScreen } from '../screens/CreateInvoiceScreen';
+import { CreateInvoiceScreen } from '../screens/CreateInvoiceScreen/CreateInvoiceScreen';
 import { InvoiceDetailScreen } from '../screens/InvoiceDetailScreen/InvoiceDetailScreen';
 
 export type RootStackParamList = {
@@ -47,7 +47,6 @@ export function RootNavigator() {
               name="Home"
               component={InvoicesListScreen}
               options={{ title: 'Invoices' }}
-              
             />
             <Stack.Screen
               name="InvoiceDetail"

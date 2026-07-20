@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useLayoutEffect, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,13 +14,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import {useAuth} from '../../contexts/AuthContext';
-import type {Invoice} from '../../types/invoice';
-import {formatCurrency, getStatusColor} from '../../utils/formatting';
-import type {RootStackParamList} from '../../navigation/RootNavigator';
+import { useAuth } from '../../contexts/AuthContext';
+import type { Invoice } from '../../types/invoice';
+import { formatCurrency, getStatusColor } from '../../utils/formatting';
+import type { RootStackParamList } from '../../navigation/RootNavigator';
 import { InlineDatePicker } from './components/InlineDatePicker';
 import { HeaderRightButtons } from './components/HeaderRightButtons';
 import { styles } from './styles';
@@ -24,13 +29,35 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const STATUS_FILTERS: Array<'all' | string> = ['all', 'Overdue', 'Due', 'Paid'];
 
-export function InvoicesListScreen({navigation}: Props) {
-  const {logout} = useAuth();
+export function InvoicesListScreen({ navigation }: Props) {
+  const { logout } = useAuth();
   const [showFromPicker, setShowFromPicker] = useState(false);
   const [showToPicker, setShowToPicker] = useState(false);
 
-  const { ordering, isLoading, statusFilter, setStatusFilter, fromDate, toDate,  error, invoices, isRefreshing, isLoadingMore, loadInitialInvoices, loadInvoices, loadMoreInvoices, setFromDate, setToDate, setSearchQuery, searchTerm, setSearchTerm, setOrdering } = useInvoices();
-  const fromDateValue = fromDate ? new Date(`${fromDate}T00:00:00`) : new Date();
+  const {
+    ordering,
+    isLoading,
+    statusFilter,
+    setStatusFilter,
+    fromDate,
+    toDate,
+    error,
+    invoices,
+    isRefreshing,
+    isLoadingMore,
+    loadInitialInvoices,
+    loadInvoices,
+    loadMoreInvoices,
+    setFromDate,
+    setToDate,
+    setSearchQuery,
+    searchTerm,
+    setSearchTerm,
+    setOrdering,
+  } = useInvoices();
+  const fromDateValue = fromDate
+    ? new Date(`${fromDate}T00:00:00`)
+    : new Date();
   const toDateValue = toDate ? new Date(`${toDate}T00:00:00`) : new Date();
   function formatDateYMD(d: Date) {
     const yyyy = d.getFullYear();
@@ -69,9 +96,13 @@ export function InvoicesListScreen({navigation}: Props) {
     }
   };
 
-
   const headerButtons = useMemo(
-    () => <HeaderRightButtons onNewPress={() => navigation.navigate('CreateInvoice')} onLogoutPress={logout} />,
+    () => (
+      <HeaderRightButtons
+        onNewPress={() => navigation.navigate('CreateInvoice')}
+        onLogoutPress={logout}
+      />
+    ),
     [navigation, logout],
   );
 
@@ -84,12 +115,6 @@ export function InvoicesListScreen({navigation}: Props) {
   useEffect(() => {
     loadInitialInvoices();
   }, [loadInitialInvoices]);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     loadInitialInvoices();
-  //   }, [loadInitialInvoices]),
-  // );
 
   const handleSearch = useCallback(() => {
     setSearchQuery(searchTerm.trim());
@@ -105,34 +130,58 @@ export function InvoicesListScreen({navigation}: Props) {
   }, [loadInvoices]);
 
   const toggleOrdering = useCallback(() => {
-    setOrdering(current => (current === 'DESCENDING' ? 'ASCENDING' : 'DESCENDING'));
+    setOrdering(current =>
+      current === 'DESCENDING' ? 'ASCENDING' : 'DESCENDING',
+    );
   }, []);
 
-  const renderInvoice = useCallback(({item}: {item: Invoice}) => {
-    const amount = item.invoiceGrossTotal ?? item.totalAmount ?? item.balanceAmount ?? 0;
+  const renderInvoice = useCallback(({ item }: { item: Invoice }) => {
+    const amount =
+      item.invoiceGrossTotal ?? item.totalAmount ?? item.balanceAmount ?? 0;
     const symbol = (item.currencySymbol ?? item.currency ?? '$') as string;
     const paymentStatus = item.status?.[0]?.key ?? 'Unknown';
     const statusColors = getStatusColor(paymentStatus);
 
     return (
       <Pressable
-        onPress={() => navigation.navigate('InvoiceDetail', {invoiceId: item.invoiceId ?? item.id})}
-        style={({pressed}) => [styles.invoiceItem, pressed && styles.invoiceItemPressed]}>
+        onPress={() =>
+          navigation.navigate('InvoiceDetail', {
+            invoiceId: item.invoiceId ?? item.id,
+          })
+        }
+        style={({ pressed }) => [
+          styles.invoiceItem,
+          pressed && styles.invoiceItemPressed,
+        ]}>
         <View style={styles.itemRow}>
           <Text style={styles.invoiceNumber}>{item.invoiceNumber}</Text>
-          <Text style={styles.invoiceAmount}>{formatCurrency(Number(amount), symbol)}</Text>
+          <Text style={styles.invoiceAmount}>
+            {formatCurrency(Number(amount), symbol)}
+          </Text>
         </View>
         <View style={styles.itemRow}>
           <Text style={styles.itemMeta}>From: {item.merchant?.name}</Text>
-          <Text style={styles.itemMeta}>To: {item.customer?.firstName} {item.customer?.lastName}</Text>
+          <Text style={styles.itemMeta}>
+            To: {item.customer?.firstName} {item.customer?.lastName}
+          </Text>
         </View>
         <View style={styles.itemRow}>
-          <Text style={styles.itemMeta}>Issue: {String(item.invoiceDate ?? (item as any).createdAt ?? '')}</Text>
+          <Text style={styles.itemMeta}>
+            Issue: {String(item.invoiceDate ?? (item as any).createdAt ?? '')}
+          </Text>
           <Text style={styles.itemMeta}>Due: {String(item.dueDate ?? '')}</Text>
         </View>
         <View style={styles.itemRow}>
-          <View style={[styles.statusBadge, {backgroundColor: statusColors.backgroundColor}]}>
-            <Text style={[styles.statusBadgeText, {color: statusColors.textColor}]}>
+          <View
+            style={[
+              styles.statusBadge,
+              { backgroundColor: statusColors.backgroundColor },
+            ]}>
+            <Text
+              style={[
+                styles.statusBadgeText,
+                { color: statusColors.textColor },
+              ]}>
               {paymentStatus}
             </Text>
           </View>
@@ -157,7 +206,10 @@ export function InvoicesListScreen({navigation}: Props) {
         {searchTerm ? (
           <Pressable
             onPress={clearSearch}
-            style={({pressed}) => [styles.clearButton, pressed && styles.buttonPressed]}>
+            style={({ pressed }) => [
+              styles.clearButton,
+              pressed && styles.buttonPressed,
+            ]}>
             <Text style={styles.clearButtonText}>Clear</Text>
           </Pressable>
         ) : null}
@@ -165,18 +217,33 @@ export function InvoicesListScreen({navigation}: Props) {
         <Pressable
           accessibilityRole="button"
           onPress={handleSearch}
-          style={({pressed}) => [styles.searchButton, pressed && styles.buttonPressed]}>
+          style={({ pressed }) => [
+            styles.searchButton,
+            pressed && styles.buttonPressed,
+          ]}>
           <Text style={styles.searchButtonText}>Search</Text>
         </Pressable>
       </View>
       <View style={styles.dateRow}>
-        <Pressable onPress={() => setShowFromPicker(true)} style={styles.dateInput}>
-          <Text style={[styles.dateInputText, fromDate ? styles.dateInputValue : styles.dateInputPlaceholder]}>
+        <Pressable
+          onPress={() => setShowFromPicker(true)}
+          style={styles.dateInput}>
+          <Text
+            style={[
+              styles.dateInputText,
+              fromDate ? styles.dateInputValue : styles.dateInputPlaceholder,
+            ]}>
             {fromDate || 'From date'}
           </Text>
         </Pressable>
-        <Pressable onPress={() => setShowToPicker(true)} style={styles.dateInput}>
-          <Text style={[styles.dateInputText, toDate ? styles.dateInputValue : styles.dateInputPlaceholder]}>
+        <Pressable
+          onPress={() => setShowToPicker(true)}
+          style={styles.dateInput}>
+          <Text
+            style={[
+              styles.dateInputText,
+              toDate ? styles.dateInputValue : styles.dateInputPlaceholder,
+            ]}>
             {toDate || 'To date'}
           </Text>
         </Pressable>
@@ -189,7 +256,7 @@ export function InvoicesListScreen({navigation}: Props) {
               <Pressable
                 key={filter}
                 onPress={() => setStatusFilter(filter)}
-                style={({pressed}) => [
+                style={({ pressed }) => [
                   styles.filterChip,
                   statusFilter === filter && styles.filterChipActive,
                   pressed && styles.buttonPressed,
@@ -211,15 +278,26 @@ export function InvoicesListScreen({navigation}: Props) {
           <Text style={styles.filterLabel}>Sort</Text>
           <Pressable
             onPress={toggleOrdering}
-            style={({pressed}) => [styles.sortButton, pressed && styles.buttonPressed]}>
+            style={({ pressed }) => [
+              styles.sortButton,
+              pressed && styles.buttonPressed,
+            ]}>
             <Text style={styles.sortButtonText}>
               {ordering === 'DESCENDING' ? 'Newest' : 'Oldest'}
             </Text>
           </Pressable>
         </View>
       </View>
-      <InlineDatePicker visible={showFromPicker} value={fromDateValue} onChange={onFromChange} />
-      <InlineDatePicker visible={showToPicker} value={toDateValue} onChange={onToChange} />
+      <InlineDatePicker
+        visible={showFromPicker}
+        value={fromDateValue}
+        onChange={onFromChange}
+      />
+      <InlineDatePicker
+        visible={showToPicker}
+        value={toDateValue}
+        onChange={onToChange}
+      />
 
       {isLoading ? (
         <View style={styles.loadingContainer}>
@@ -240,7 +318,10 @@ export function InvoicesListScreen({navigation}: Props) {
           renderItem={renderInvoice}
           contentContainerStyle={styles.listContent}
           refreshControl={
-            <RefreshControl refreshing={isRefreshing} onRefresh={() => loadInvoices(1, true)} />
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={() => loadInvoices(1, true)}
+            />
           }
           onEndReached={loadMoreInvoices}
           onEndReachedThreshold={0.5}

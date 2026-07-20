@@ -11,23 +11,18 @@ export function HeaderRightButtons({
   onLogoutPress: () => void;
 }) {
   const handleLogout = () => {
-    Alert.prompt(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: () => onLogoutPress(),
-        },
-      ],
-      'default',
-    );
-  }
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: () => onLogoutPress(),
+      },
+    ]);
+  };
 
   return (
     <View style={styles.headerButtonsContainer}>

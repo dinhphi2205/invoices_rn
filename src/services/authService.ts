@@ -32,7 +32,7 @@ async function requestToken(body: URLSearchParams): Promise<TokenResponse> {
 export async function fetchUserProfile(
   accessToken: string,
 ): Promise<UserProfile> {
-  const response = await axios.get<{data: UserProfile}>(
+  const response = await axios.get<{ data: UserProfile }>(
     `${env.apiBaseUrl}/membership-service/1.0.0/users/me`,
     {
       headers: {

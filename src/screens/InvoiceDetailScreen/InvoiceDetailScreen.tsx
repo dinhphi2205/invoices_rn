@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
