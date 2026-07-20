@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {useAuth} from '../contexts/AuthContext';
-import {HomeScreen} from '../screens/HomeScreen';
+import {InvoicesListScreen} from '../screens/InvoiceListScreen/InvoicesListScreen';
 import {LoginScreen} from '../screens/LoginScreen';
 import {CreateInvoiceScreen} from '../screens/CreateInvoiceScreen';
 import {InvoiceDetailScreen} from '../screens/InvoiceDetailScreen';
@@ -43,7 +43,7 @@ export function RootNavigator() {
         }}>
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="Home" component={HomeScreen} options={{title: 'Invoices'}} />
+            <Stack.Screen name="Home" component={InvoicesListScreen} options={{title: 'Invoices'}} />
             <Stack.Screen
               name="InvoiceDetail"
               component={InvoiceDetailScreen}
