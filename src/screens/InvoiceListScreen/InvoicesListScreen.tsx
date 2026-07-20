@@ -85,11 +85,11 @@ export function InvoicesListScreen({navigation}: Props) {
     loadInitialInvoices();
   }, [loadInitialInvoices]);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadInitialInvoices();
-    }, [loadInitialInvoices]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     loadInitialInvoices();
+  //   }, [loadInitialInvoices]),
+  // );
 
   const handleSearch = useCallback(() => {
     setSearchQuery(searchTerm.trim());

@@ -32,7 +32,7 @@ async function requestToken(body: URLSearchParams): Promise<TokenResponse> {
 export async function fetchUserProfile(
   accessToken: string,
 ): Promise<UserProfile> {
-  const response = await axios.get<UserProfile>(
+  const response = await axios.get<{data: UserProfile}>(
     `${env.apiBaseUrl}/membership-service/1.0.0/users/me`,
     {
       headers: {
@@ -42,11 +42,11 @@ export async function fetchUserProfile(
     },
   );
 
-  return response.data;
+  return response.data.data;
 }
 
 function extractOrgToken(profile: UserProfile): string {
-  const orgToken = profile.data.memberships?.[0]?.token;
+  const orgToken = profile.memberships?.[0]?.token;
 
   if (!orgToken) {
     throw new Error('Unable to resolve organisation token from user profile.');
