@@ -35,8 +35,10 @@ export async function fetchInvoices(
 }
 
 export async function fetchInvoice(invoiceId: string): Promise<Invoice> {
-  const response = await apiClient.get<Invoice>(`${invoicePath}/${invoiceId}`);
-  return response.data;
+  const response = await apiClient.get<{ data: Invoice }>(
+    `${invoicePath}/${invoiceId}`,
+  );
+  return response.data.data;
 }
 
 export async function createInvoice(
