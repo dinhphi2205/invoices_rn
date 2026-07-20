@@ -11,6 +11,8 @@ import {
   View,
   Alert,
 } from 'react-native';
+import DatePicker from 'react-native-date-picker';
+import PickerModalView from 'react-native-picker-modal-view';
 import {Controller, useFieldArray, useForm, type Control} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -27,6 +29,28 @@ function getErrorMessage(error: unknown): string {
   }
 
   return 'Unable to create invoice. Please try again.';
+}
+
+function InvoiceDatePicker({
+  visible,
+  value,
+  onChange,
+}: {
+  visible: boolean;
+  value: Date;
+  onChange: (date: Date) => void;
+}) {
+  if (!visible) return null;
+  return (
+    <DatePicker
+      modal
+      open={visible}
+      date={value}
+      mode="date"
+      onConfirm={onChange}
+      onCancel={() => {}}
+    />
+  );
 }
 
 function ItemExtensions({
@@ -95,15 +119,26 @@ function ItemExtensions({
               <Controller
                 control={control}
                 name={"items." + itemIndex + ".extensions." + extIndex + ".type" as any}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextInput
-                    editable={!isSubmitting}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    placeholder="FIXED_VALUE"
-                    placeholderTextColor="#9CA3AF"
-                    style={[styles.input]}
-                    value={value as string}
+                render={({field: {onChange, value}}) => (
+                  <PickerModalView
+                    renderSelectView={(disabled, selected, showModal) => (
+                      <Pressable
+                        onPress={showModal}
+                        disabled={disabled}
+                        style={[styles.input, styles.dateInputButton]}>
+                        <Text style={[styles.dateInputText, selected?.Name ? styles.pickerTextColor : styles.pickerTextPlaceholder]}>
+                          {selected?.Name || 'Type'}
+                        </Text>
+                      </Pressable>
+                    )}
+                    onSelected={(item: any) => {
+                      onChange(item.Id);
+                      return item;
+                    }}
+                    onClosed={() => {}}
+                    onEndReached={() => {}}
+                    items={[{Id: 'PERCENTAGE', Name: 'PERCENTAGE', Value: 'PERCENTAGE'}, {Id: 'FIXED_VALUE', Name: 'FIXED_VALUE', Value: 'FIXED_VALUE'}]}
+                    selected={{Id: value, Name: value, Value: value}}
                   />
                 )}
               />
@@ -114,15 +149,26 @@ function ItemExtensions({
               <Controller
                 control={control}
                 name={"items." + itemIndex + ".extensions." + extIndex + ".addDeduct" as any}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextInput
-                    editable={!isSubmitting}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    placeholder="ADD"
-                    placeholderTextColor="#9CA3AF"
-                    style={[styles.input]}
-                    value={value as string}
+                render={({field: {onChange, value}}) => (
+                  <PickerModalView
+                    renderSelectView={(disabled, selected, showModal) => (
+                      <Pressable
+                        onPress={showModal}
+                        disabled={disabled}
+                        style={[styles.input, styles.dateInputButton]}>
+                        <Text style={[styles.dateInputText, selected?.Name ? styles.pickerTextColor : styles.pickerTextPlaceholder]}>
+                          {selected?.Name || 'Add/Deduct'}
+                        </Text>
+                      </Pressable>
+                    )}
+                    onSelected={(item: any) => {
+                      onChange(item.Id);
+                      return item;
+                    }}
+                    onClosed={() => {}}
+                    onEndReached={() => {}}
+                    items={[{Id: 'ADD', Name: 'ADD', Value: 'ADD'}, {Id: 'DEDUCT', Name: 'DEDUCT', Value: 'DEDUCT'}]}
+                    selected={{Id: value, Name: value, Value: value}}
                   />
                 )}
               />
@@ -326,11 +372,14 @@ function CustomerAddresses({
 
 export function CreateInvoiceScreen({navigation}: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showInvoiceDatePicker, setShowInvoiceDatePicker] = useState(false);
+  const [showDueDatePicker, setShowDueDatePicker] = useState(false);
 
   const {
     control,
     handleSubmit,
     formState: {errors, isSubmitting},
+    setValue,
   } = useForm<CreateInvoiceFormValues>({
     defaultValues: {
       bankAccount: {
@@ -354,8 +403,8 @@ export function CreateInvoiceScreen({navigation}: Props) {
           },
         ],
       },
-      invoiceReference: '#123456',
-      invoiceNumber: 'INV123456701',
+      invoiceReference: '#123456789',
+      invoiceNumber: 'INV000000001',
       currency: 'GBP',
       invoiceDate: new Date().toISOString().slice(0, 10),
       dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
@@ -408,6 +457,88 @@ export function CreateInvoiceScreen({navigation}: Props) {
       <ScrollView contentContainerStyle={styles.card} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Create Invoice</Text>
         <Text style={styles.subtitle}>Fill in the invoice details below.</Text>
+
+                <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Bank Account</Text>
+
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Sort Code</Text>
+            <Controller
+              control={control}
+              name="bankAccount.sortCode"
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  editable={!isSubmitting}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  placeholder="09-01-01"
+                  placeholderTextColor="#9CA3AF"
+                  style={[styles.input]}
+                  value={value as string}
+                />
+              )}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Account Number</Text>
+            <Controller
+              control={control}
+              name="bankAccount.accountNumber"
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  keyboardType="numeric"
+                  editable={!isSubmitting}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  placeholder="12345678"
+                  placeholderTextColor="#9CA3AF"
+                  style={[styles.input]}
+                  value={value as string}
+                />
+              )}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Account Name</Text>
+            <Controller
+              control={control}
+              name="bankAccount.accountName"
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  autoCapitalize="words"
+                  editable={!isSubmitting}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  placeholder="John Terry"
+                  placeholderTextColor="#9CA3AF"
+                  style={[styles.input]}
+                  value={value as string}
+                />
+              )}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Bank ID</Text>
+            <Controller
+              control={control}
+              name="bankAccount.bankId"
+              render={({field: {onChange, onBlur, value}}) => (
+                <TextInput
+                  editable={!isSubmitting}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  placeholder="Optional bank ID"
+                  placeholderTextColor="#9CA3AF"
+                  style={[styles.input]}
+                  value={value as string}
+                />
+              )}
+            />
+          </View>
+        </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Customer</Text>
@@ -550,16 +681,19 @@ export function CreateInvoiceScreen({navigation}: Props) {
               <Controller
                 control={control}
                 name="invoiceDate"
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextInput
-                    editable={!isSubmitting}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    placeholder="YYYY-MM-DD"
-                    placeholderTextColor="#9CA3AF"
-                    style={[styles.input, errors.invoiceDate && styles.inputError]}
-                    value={value as string}
-                  />
+                render={({field: {value}}) => (
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => setShowInvoiceDatePicker(true)}
+                    style={[styles.input, errors.invoiceDate && styles.inputError, styles.dateInputButton]}>
+                    <Text
+                      style={[
+                        styles.dateInputText,
+                        (value as string) ? styles.dateInputValue : styles.dateInputPlaceholder,
+                      ]}>
+                      {(value as string) || 'Select date'}
+                    </Text>
+                  </Pressable>
                 )}
               />
               {errors.invoiceDate ? (
@@ -572,16 +706,19 @@ export function CreateInvoiceScreen({navigation}: Props) {
               <Controller
                 control={control}
                 name="dueDate"
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextInput
-                    editable={!isSubmitting}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    placeholder="YYYY-MM-DD"
-                    placeholderTextColor="#9CA3AF"
-                    style={[styles.input, errors.dueDate && styles.inputError]}
-                    value={value as string}
-                  />
+                render={({field: {value}}) => (
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => setShowDueDatePicker(true)}
+                    style={[styles.input, errors.dueDate && styles.inputError, styles.dateInputButton]}>
+                    <Text
+                      style={[
+                        styles.dateInputText,
+                        (value as string) ? styles.dateInputValue : styles.dateInputPlaceholder,
+                      ]}>
+                      {(value as string) || 'Select date'}
+                    </Text>
+                  </Pressable>
                 )}
               />
               {errors.dueDate ? (
@@ -633,89 +770,6 @@ export function CreateInvoiceScreen({navigation}: Props) {
             />
           </View>
         </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Bank Account</Text>
-
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Sort Code</Text>
-            <Controller
-              control={control}
-              name="bankAccount.sortCode"
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  editable={!isSubmitting}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  placeholder="09-01-01"
-                  placeholderTextColor="#9CA3AF"
-                  style={[styles.input]}
-                  value={value as string}
-                />
-              )}
-            />
-          </View>
-
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Account Number</Text>
-            <Controller
-              control={control}
-              name="bankAccount.accountNumber"
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  keyboardType="numeric"
-                  editable={!isSubmitting}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  placeholder="12345678"
-                  placeholderTextColor="#9CA3AF"
-                  style={[styles.input]}
-                  value={value as string}
-                />
-              )}
-            />
-          </View>
-
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Account Name</Text>
-            <Controller
-              control={control}
-              name="bankAccount.accountName"
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  autoCapitalize="words"
-                  editable={!isSubmitting}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  placeholder="John Terry"
-                  placeholderTextColor="#9CA3AF"
-                  style={[styles.input]}
-                  value={value as string}
-                />
-              )}
-            />
-          </View>
-
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Bank ID</Text>
-            <Controller
-              control={control}
-              name="bankAccount.bankId"
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  editable={!isSubmitting}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  placeholder="Optional bank ID"
-                  placeholderTextColor="#9CA3AF"
-                  style={[styles.input]}
-                  value={value as string}
-                />
-              )}
-            />
-          </View>
-        </View>
-
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Items</Text>
           {itemFields.map((item, index) => (
@@ -846,6 +900,28 @@ export function CreateInvoiceScreen({navigation}: Props) {
           )}
         </Pressable>
       </ScrollView>
+      <InvoiceDatePicker
+        visible={showInvoiceDatePicker}
+        value={new Date()}
+        onChange={(date: Date) => {
+          const yyyy = date.getFullYear();
+          const mm = String(date.getMonth() + 1).padStart(2, '0');
+          const dd = String(date.getDate()).padStart(2, '0');
+          setValue('invoiceDate', `${yyyy}-${mm}-${dd}`);
+          setShowInvoiceDatePicker(false);
+        }}
+      />
+      <InvoiceDatePicker
+        visible={showDueDatePicker}
+        value={new Date()}
+        onChange={(date: Date) => {
+          const yyyy = date.getFullYear();
+          const mm = String(date.getMonth() + 1).padStart(2, '0');
+          const dd = String(date.getDate()).padStart(2, '0');
+          setValue('dueDate', `${yyyy}-${mm}-${dd}`);
+          setShowDueDatePicker(false);
+        }}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -987,5 +1063,24 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#111827',
     marginBottom: 8,
+  },
+  dateInputButton: {
+    justifyContent: 'center',
+  },
+  dateInputText: {
+    fontSize: 16,
+    color: '#111827',
+  },
+  dateInputValue: {
+    color: '#111827',
+  },
+  dateInputPlaceholder: {
+    color: '#9CA3AF',
+  },
+  pickerTextColor: {
+    color: '#111827',
+  },
+  pickerTextPlaceholder: {
+    color: '#9CA3AF',
   },
 });
