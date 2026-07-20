@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { Alert } from 'react-native';
 
 import {
   login as loginRequest,
@@ -49,6 +50,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     bootstrapAuth();
     setSessionExpiredListener(() => {
       setSession(null);
+      Alert.alert(
+        'Session Expired',
+        'Your session has expired. Please log in again.',
+        [{ text: 'OK' }],
+      );
     });
 
     return () => {
