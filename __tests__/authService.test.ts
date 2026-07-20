@@ -73,13 +73,18 @@ describe('authService', () => {
         refresh_token: 'new-refresh-token',
       },
     });
+    mockedAxios.get.mockResolvedValueOnce({
+      data: {
+        data: { memberships: [{ token: 'org-token1' }] },
+      },
+    });
 
     mockedTokenStorage.saveTokens.mockResolvedValue(undefined);
 
     const session = await refreshAccessToken();
 
     expect(session.accessToken).toBe('new-access-token');
-    expect(session.orgToken).toBe('org-token');
+    expect(session.orgToken).toBe('org-token1');
     expect(mockedTokenStorage.saveTokens).toHaveBeenCalledWith(session);
   });
 });
