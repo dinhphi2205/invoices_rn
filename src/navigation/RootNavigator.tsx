@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { InvoicesListScreen } from '../screens/InvoiceListScreen/InvoicesListScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { CreateInvoiceScreen } from '../screens/CreateInvoiceScreen';
-import { InvoiceDetailScreen } from '../screens/InvoiceDetailScreen';
+import { InvoiceDetailScreen } from '../screens/InvoiceDetailScreen/InvoiceDetailScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -47,6 +47,7 @@ export function RootNavigator() {
               name="Home"
               component={InvoicesListScreen}
               options={{ title: 'Invoices' }}
+              
             />
             <Stack.Screen
               name="InvoiceDetail"

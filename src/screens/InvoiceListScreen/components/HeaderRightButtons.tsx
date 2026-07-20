@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { LogoutIcon } from '../../../components/LogoutIcon';
 
@@ -10,6 +10,25 @@ export function HeaderRightButtons({
   onNewPress: () => void;
   onLogoutPress: () => void;
 }) {
+  const handleLogout = () => {
+    Alert.prompt(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: () => onLogoutPress(),
+        },
+      ],
+      'default',
+    );
+  }
+
   return (
     <View style={styles.headerButtonsContainer}>
       <Pressable
@@ -23,7 +42,7 @@ export function HeaderRightButtons({
       </Pressable>
       <Pressable
         accessibilityRole="button"
-        onPress={onLogoutPress}
+        onPress={handleLogout}
         style={({ pressed }) => [
           styles.headerIconButton,
           pressed && styles.buttonPressed,
