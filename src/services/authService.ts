@@ -91,9 +91,7 @@ export async function refreshAccessToken(): Promise<AuthSession> {
   });
 
   const tokenResponse = await requestToken(body);
-  const orgToken =
-    storedTokens.orgToken ??
-    extractOrgToken(await fetchUserProfile(tokenResponse.access_token));
+  const orgToken = extractOrgToken(await fetchUserProfile(tokenResponse.access_token));
 
   const session: AuthSession = {
     accessToken: tokenResponse.access_token,
